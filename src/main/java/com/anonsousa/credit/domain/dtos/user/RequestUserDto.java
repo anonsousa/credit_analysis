@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUserDto {
+public class RequestUserDto {
 
     @NotBlank
     private String name;
@@ -18,3 +18,4 @@ public class CreateUserDto {
     @Email
     private String email;
 }
+

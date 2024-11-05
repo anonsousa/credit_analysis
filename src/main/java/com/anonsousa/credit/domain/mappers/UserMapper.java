@@ -1,6 +1,7 @@
 package com.anonsousa.credit.domain.mappers;
 
-import com.anonsousa.credit.domain.dtos.user.CreateUserDto;
+import com.anonsousa.credit.domain.dtos.user.RequestUserDto;
+import com.anonsousa.credit.domain.dtos.user.ResponseUserDto;
 import com.anonsousa.credit.domain.model.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,5 +15,8 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "status", ignore = true)
-    UserEntity userDtoToUserEntity(CreateUserDto createUserDto);
+    UserEntity userDtoToUserEntity(RequestUserDto requestUserDto);
+
+
+    ResponseUserDto userEntityToUserDto(UserEntity userEntity);
 }

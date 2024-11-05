@@ -1,7 +1,7 @@
 package com.anonsousa.credit.controllers;
 
-import com.anonsousa.credit.domain.dtos.user.CreateUserDto;
-import com.anonsousa.credit.domain.model.UserEntity;
+import com.anonsousa.credit.domain.dtos.user.RequestUserDto;
+import com.anonsousa.credit.domain.dtos.user.ResponseUserDto;
 import com.anonsousa.credit.domain.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,24 +20,24 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserEntity> createUser(@RequestBody @Valid CreateUserDto user) {
-        UserEntity userEntity = userService.createUser(user);
+    public ResponseEntity<ResponseUserDto> createUser(@RequestBody @Valid RequestUserDto user) {
+        ResponseUserDto userDto = userService.createUser(user);
 
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(userEntity.getId())
+                .buildAndExpand(userDto.getId())
                 .toUri())
-                .body(userEntity);
+                .body(userDto);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserEntity> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<ResponseUserDto> getUserById(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(userId));
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserEntity> updateUserById(@PathVariable Long userId,
-                                                     @RequestBody @Valid CreateUserDto user) {
+    public ResponseEntity<ResponseUserDto> updateUserById(@PathVariable Long userId,
+                                                     @RequestBody @Valid RequestUserDto user) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserById(userId, user));
     }
 
