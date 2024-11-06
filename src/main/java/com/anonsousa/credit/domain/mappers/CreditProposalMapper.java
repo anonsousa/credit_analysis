@@ -1,6 +1,7 @@
 package com.anonsousa.credit.domain.mappers;
 
 import com.anonsousa.credit.domain.dtos.creditproposal.RequestCreditProposal;
+import com.anonsousa.credit.domain.dtos.creditproposal.ResponseCreditProposal;
 import com.anonsousa.credit.domain.model.CreditProposalEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,4 +16,7 @@ public interface CreditProposalMapper {
     @Mapping(target = "approved", ignore = true)
     @Mapping(target = "integrated", ignore = true)
     CreditProposalEntity convertDtoToEntity(RequestCreditProposal creditProposal);
+
+
+    ResponseCreditProposal convertEntityToDto(CreditProposalEntity creditProposal);
 }
