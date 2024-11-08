@@ -3,7 +3,13 @@ package com.anonsousa.credit.domain.model;
 import com.anonsousa.credit.domain.enums.creditproposal.EmploymentStatus;
 import com.anonsousa.credit.domain.enums.creditproposal.MaritalStatus;
 import com.anonsousa.credit.domain.enums.creditproposal.ResidenceType;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +45,6 @@ public class CreditProposalEntity {
 
     private Boolean approved;
 
-    private boolean integrated;
+    private boolean integrated = Boolean.TRUE;
 
 }

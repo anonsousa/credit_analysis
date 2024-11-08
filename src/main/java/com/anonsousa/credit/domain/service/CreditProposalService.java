@@ -8,6 +8,7 @@ import com.anonsousa.credit.domain.model.UserEntity;
 import com.anonsousa.credit.domain.repository.CreditProposalRepository;
 import com.anonsousa.credit.domain.repository.UserRepository;
 import com.anonsousa.credit.infra.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +19,17 @@ public class CreditProposalService {
 
     private final CreditProposalRepository creditProposalRepository;
     private final UserRepository userRepository;
+    private final NotifyRabbitService notifyRabbitService;
+    private final String exchange;
 
-    public CreditProposalService(CreditProposalRepository creditProposalRepository, UserRepository userRepository) {
+    public CreditProposalService(CreditProposalRepository creditProposalRepository,
+                                 UserRepository userRepository,
+                                 NotifyRabbitService notifyRabbitService,
+                                 @Value("${rabbitmq.pending.proposal.exchange}") String exchange) {
         this.creditProposalRepository = creditProposalRepository;
         this.userRepository = userRepository;
+        this.notifyRabbitService = notifyRabbitService;
+        this.exchange = exchange;
     }
 
     @Transactional
@@ -32,6 +40,8 @@ public class CreditProposalService {
 
             CreditProposalEntity creditProposalEntity = CreditProposalMapper.INSTANCE.convertDtoToEntity(creditProposal);
             creditProposalEntity = creditProposalRepository.save(creditProposalEntity);
+
+            notifyRabbitQueue(creditProposalEntity);
 
             return CreditProposalMapper.INSTANCE.convertEntityToDto(creditProposalEntity);
         } else {
@@ -45,5 +55,15 @@ public class CreditProposalService {
                 .findById(proposalId).orElseThrow(() -> new ResourceNotFoundException("CreditProposal not found"));
 
         return CreditProposalMapper.INSTANCE.convertEntityToDto(creditProposal);
+    }
+
+    public void notifyRabbitQueue(CreditProposalEntity proposal) {
+        try{
+            notifyRabbitService.sendToQueue(proposal, exchange);
+        } catch (RuntimeException exception) {
+            proposal.setIntegrated(false);
+            creditProposalRepository.save(proposal);
+        }
+
     }
 }
